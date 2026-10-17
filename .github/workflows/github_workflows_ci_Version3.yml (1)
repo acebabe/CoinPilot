@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  python:
+    name: Python checks & tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies (if present)
+        run: |
+          if [ -f backend/requirements.txt ]; then
+            python -m pip install --upgrade pip
+            pip install -r backend/requirements.txt
+          else
+            echo "No backend/requirements.txt found — skipping install."
+          fi
+
+      - name: Lint with flake8 (if available)
+        run: |
+          if [ -f backend/.flake8 ] || [ -f backend/setup.cfg ]; then
+            pip install flake8 --no-input || true
+            if command -v flake8 >/dev/null 2>&1; then
+              flake8 backend || true
+            else
+              echo "flake8 not available; skipping lint."
+            fi
+          else
+            echo "No Python lint config found; skipping lint."
+          fi
+
+      - name: Run Python tests (pytest) (if present)
+        run: |
+          if [ -d backend/tests ]; then
+            pip install pytest --no-input || true
+            pytest backend/tests -q
+          else
+            echo "No Python tests found; skipping pytest."
+          fi
+
+  node:
+    name: Node / Frontend checks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install frontend deps (if package.json exists)
+        run: |
+          if [ -f frontend/package.json ]; then
+            npm ci --prefix frontend || npm install --prefix frontend
+          else
+            echo "No frontend/package.json; skipping npm install."
+          fi
+
+      - name: Run frontend lint (if configured)
+        run: |
+          if [ -f frontend/package.json ]; then
+            npm run --prefix frontend lint --if-present
+          else
+            echo "No frontend package.json; skipping lint."
+          fi
+
+      - name: Run frontend tests (if configured)
+        run: |
+          if [ -f frontend/package.json ]; then
+            npm run --prefix frontend test --if-present
+          else
+            echo "No frontend package.json; skipping tests."
+          fi
+
+      - name: Run frontend build (if configured)
+        run: |
+          if [ -f frontend/package.json ]; then
+            npm run --prefix frontend build --if-present
+          else
+            echo "No frontend package.json; skipping build."
+          fi
