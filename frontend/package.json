@@ -1,0 +1,10 @@
+{
+  "name": "ledgerlocket-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "lint": "echo \"No lint configured for frontend\"",
+    "test": "echo \"No frontend tests configured\"",
+    "build": "echo \"No frontend build configured\""
+  }
+}

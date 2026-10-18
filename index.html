@@ -4,30 +4,45 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>CoinPilot</title>
-    <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; line-height:1.6; padding:3rem; background:#f7fafc; color:#0f172a }
-      main { max-width: 800px; margin: 0 auto; background: white; padding:2rem; border-radius:8px; box-shadow:0 6px 20px rgba(2,6,23,0.08)}
-      header h1 { margin:0 0 .25rem 0 }
-      footer { margin-top:1.5rem; color:#475569 }
-      a.button { display:inline-block; padding:.5rem .75rem; background:#0ea5a4; color:white; border-radius:6px; text-decoration:none }
-    </style>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <meta name="description" content="CoinPilot - Off-chain ledger demo: credits, signup/login, admin controls, notifications, and Exchange Integration stub." />
+    <link rel="manifest" href="/manifest.json" />
   </head>
   <body>
-    <main>
-      <header>
-        <h1>CoinPilot</h1>
-        <p>Production-minded off-chain ledger (placeholder site).</p>
-      </header>
-      <section>
-        <p>This repository is configured to deploy static content to GitHub Pages using an Actions workflow. This page is a placeholder so the Pages workflow can publish a live URL for the project.</p>
-        <p>If you have a frontend build (dist/, build/, or an index.html), replace this file with your production build files or add them to the repository root.</p>
-        <p>
-          <a class="button" href="https://github.com/acebabe/CoinPilot">View repository on GitHub</a>
-        </p>
-      </section>
-      <footer>
-        <small>Once GitHub Pages finishes deploying, the site will be available at https://acebabe.github.io/CoinPilot/ (or a custom domain if configured in repository settings).</small>
-      </footer>
-    </main>
+    <div id="app">
+      <nav class="nav">
+        <div class="brand">CoinPilot</div>
+        <div class="links">
+          <a href="#/">Home</a>
+          <a href="#/dashboard">Dashboard</a>
+          <a href="#/notifications">Notifications</a>
+          <a href="#/exchange">Exchange</a>
+          <a href="#/admin" id="admin-link" class="hidden">Admin</a>
+          <button id="login-btn" class="btn small">Login</button>
+        </div>
+      </nav>
+
+      <main id="page"></main>
+
+      <footer class="footer">Built for demo: centralized non-withdrawable credits • Exchange Integration (Coinbase stub)</footer>
+    </div>
+
+    <!-- Login modal -->
+    <div id="modal" class="modal hidden">
+      <div class="modal-panel">
+        <h3 id="modal-title">Login</h3>
+        <form id="auth-form">
+          <label>Email <input id="email" type="email" required /></label>
+          <label>Password <input id="password" type="password" required /></label>
+          <div class="form-row">
+            <button type="submit" class="btn">Submit</button>
+            <button type="button" id="cancel" class="btn alt">Cancel</button>
+          </div>
+        </form>
+        <p class="small">Demo accounts: user@example.com / password — admin@example.com / adminpass</p>
+      </div>
+    </div>
+
+    <script src="/static/app.js" defer></script>
   </body>
 </html>
